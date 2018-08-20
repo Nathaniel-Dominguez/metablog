@@ -18,5 +18,14 @@
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.38.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nathaniel-Dominguez/metablog.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Nathaniel-Dominguez/metablog/issues"
+  },
+  "homepage": "https://github.com/Nathaniel-Dominguez/metablog#readme"
 }
