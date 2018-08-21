@@ -54,8 +54,9 @@ router.post('/', function(req, res){
         	db.tag.findOrCreate({
             where: {name: t.trim()}
           }).spread(function(newTag, wasCreated){
-            createdArticle.addTag(newTag);
-            done();
+            createdArticle.addTag(newTag).then(function() {
+            	done();
+            });
           });
         }, function() {
         	// This code runs when everything is 100/100 
