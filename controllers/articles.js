@@ -1,3 +1,4 @@
+var async = require('async');
 var express = require('express')
 var router = express.Router();
 var db = require('../models');
@@ -37,35 +38,53 @@ router.get('/:id', function(req, res) {
 	});
 });
 
-router.post('/', function(req, res) {
-	console.log(req.body);
-	db.article.create(req.body).then(function(createdArticle) {
-		// Parse the tags (if there are any)
-		var tags = [];
-		if(req.body.tags) {
-			tags = req.body.tags.split(',');
-		}
+router.post('/', function(req, res){
+  if(req.body.authorId > 0){
+    db.article.create(req.body).then(function(createdArticle){
+      // Parse the tags (if there are any)
+      var tags = [];
+      if(req.body.tags){
+        tags = req.body.tags.split(',');
+      }
 
-		if(tags.length > 0) {
-			// Loop through tags, create as needed, then add relation in join table
-			tags.forEach(function(t) {
-				db.tag.findOrCreate({
-					where: {name: t.trim()}
-				}).spread(function(newTag, wasCreated) {
-					createdArticle.addTag(newTag);
-				}) ;
-			});
+      if(tags.length > 0){
+        // Loop through tags, create if needed, the add relation in join table
+        async.forEach(tags, function(t, done) {
+        	// This code runs for each individual tag we need to add
+        	db.tag.findOrCreate({
+            where: {name: t.trim()}
+          }).spread(function(newTag, wasCreated){
+            createdArticle.addTag(newTag);
+            done();
+          });
+        }, function() {
+        	// This code runs when everything is 100/100 
+        	res.redirect('/articles/' + createdArticle.id);
+        });
 
-			res.redirect('/articles/' + createdArticle.id);
+        // This has timing issues better use async
+        // tags.forEach(function(t){
+        //   db.tag.findOrCreate({
+        //     where: {name: t.trim()}
+        //   }).spread(function(newTag, wasCreated){
+        //     createdArticle.addTag(newTag);
+        //   });
+        // });
 
-		}
-		else {
-			res.redirect('/articles/' + createdArticle.id);
-		}
-	}).catch(function(err) {
-		console.log(err);
-		res.send('NOoooooooo');
-	});
+        // res.redirect('/articles/' + createdArticle.id);
+      }
+      else {
+        res.redirect('/articles/' + createdArticle.id);
+      }
+    }).catch(function(err){
+      console.log(err);
+      res.render('error');
+    });
+  }
+  else {
+    res.redirect('/articles/new')
+  }
 });
+
 
 module.exports = router;
