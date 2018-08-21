@@ -12,14 +12,19 @@ app.set('view engine', 'ejs');
 app.use(ejsLayouts);
 app.use(bodyParser.urlencoded({ extended: false }));
 
+//Include controllers/routes
+app.use('/articles', require('./controllers/articles'));
+app.use('/authors', require('./controllers/authors'));
+
 // Define Routes
 app.get('/', function(req, res) {
 	res.render('home');
 });
 
-//Include controllers/routes
-app.use('/articles', require('./controllers/articles'));
-app.use('/authors', require('./controllers/authors'));
+app.get('*', function(req, res) {
+	console.log('wildcard route');
+	res.render('error');
+});
 
 // Hey! Listen! - Navi
 app.listen(3000, function() {
