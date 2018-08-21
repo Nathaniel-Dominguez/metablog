@@ -14,6 +14,7 @@ router.get('/:id', function(req, res) {
 });
 
 router.post('/', function(req, res) {
+	console.log(req.body);
 	res.send('/authors POST route reached')
 });
 
