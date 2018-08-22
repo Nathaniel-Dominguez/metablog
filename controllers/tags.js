@@ -20,4 +20,9 @@ router.get('/:id', function(req, res) {
 	})
 });
 
+router.delete('/:id', function(req, res) {
+	res.send('IS MR WALLACE A BITCH?');
+});
+
+
 module.exports = router;
