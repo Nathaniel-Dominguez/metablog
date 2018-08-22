@@ -16,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/articles', require('./controllers/articles'));
 app.use('/authors', require('./controllers/authors'));
 app.use('/comments', require('./controllers/comments'));
+app.use('/tags', require('./controllers/tags'));
 
 // Define Routes
 app.get('/', function(req, res) {
